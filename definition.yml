@@ -1,6 +1,6 @@
 id: phenopath
-docker_repository: dynverse/dynmethods:phenopath
-container_url: https://github.com/dynverse/dynmethods/tree/master/containers/phenopath
+docker_repository: dynverse/ti_phenopath
+container_url: https://github.com/dynverse/ti_phenopath
 name: PhenoPath
 type: algorithm
 platform: R
