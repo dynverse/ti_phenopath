@@ -1,5 +1,6 @@
 id: phenopath
 docker_repository: dynverse/ti_phenopath
+singularity_collection: 1563
 container_url: https://github.com/dynverse/ti_phenopath
 name: PhenoPath
 type: algorithm
