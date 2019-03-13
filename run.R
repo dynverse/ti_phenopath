@@ -1,3 +1,7 @@
+#!/usr/local/bin/Rscript
+
+task <- dyncli::main()
+
 library(jsonlite)
 library(readr)
 library(dplyr)
@@ -8,16 +12,8 @@ library(phenopath)
 #   ____________________________________________________________________________
 #   Load data                                                               ####
 
-data <- read_rds("/ti/input/data.rds")
-params <- jsonlite::read_json("/ti/input/params.json")
-
-#' @examples
-#' data <- dyntoy::generate_dataset(id = "test", num_cells = 300, num_features = 300, model = "linear") %>% c(., .$prior_information)
-#' params <- yaml::read_yaml("containers/embeddr/definition.yml")$parameters %>%
-#'   {.[names(.) != "forbidden"]} %>%
-#'   map(~ .$default)
-
-expression <- data$expression
+params <- task$params
+expression <- as.matrix(task$expression)
 
 #   ____________________________________________________________________________
 #   Infer trajectory                                                        ####
@@ -51,4 +47,8 @@ output <- lst(
 #   ____________________________________________________________________________
 #   Save output                                                             ####
 
-write_rds(output, "/ti/output/output.rds")
+output <- dynwrap::wrap_data(cell_ids = names(pseudotime)) %>%
+  dynwrap::add_linear_trajectory(pseudotime = pseudotime) %>%
+  dynwrap::add_timings(timings = checkpoints)
+
+output %>% dyncli::write_output(task$output)
