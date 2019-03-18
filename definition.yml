@@ -53,12 +53,12 @@ parameters:
     - '4'
     - '5'
     - 'random'
-    description: "The initialisation of the latent trajectory. Should be one of\n\\enumerate{\n\\item
-      A positive integer describing which principal component of the data should\nbe
-      used for initialisation (default 1), \\emph{or}\n\\item A numeric vector of
-      length number of samples to be used \ndirectly for initialisation, \\emph{or}\n\\item
-      The text character \\code{\"random\"}, for random initialisation \nfrom a standard
-      normal distribution.\n}"
+    description: "The initialisation of the latent trajectory. Should be one of 
+      
+      * A positive integer describing which principal component of the data should be
+      used for initialisation (default 1), or
+      * A numeric vector of length number of samples to be used directly for initialisation, or
+      * The text character `"random"`, for random initialisation from a standard normal distribution."
   - id: model_mu
     type: logical
     default: no
