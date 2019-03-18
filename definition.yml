@@ -40,9 +40,7 @@ parameters:
       type: uniform
       upper: 500
       lower: 2
-    description: |-
-      The number of iterations to wait each time before
-      re-calculating the elbo
+    description: The number of iterations to wait each time before re-calculating the elbo
   - id: z_init
     type: character
     default: '1'
@@ -53,12 +51,11 @@ parameters:
     - '4'
     - '5'
     - 'random'
-    description: "The initialisation of the latent trajectory. Should be one of 
+    description: 'The initialisation of the latent trajectory. Should be one of 
       
       * A positive integer describing which principal component of the data should be
       used for initialisation (default 1), or
-      * A numeric vector of length number of samples to be used directly for initialisation, or
-      * The text character `"random"`, for random initialisation from a standard normal distribution."
+      * The text character `"random"`, for random initialisation from a standard normal distribution.'
   - id: model_mu
     type: logical
     default: no
