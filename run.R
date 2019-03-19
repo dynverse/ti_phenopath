@@ -12,7 +12,7 @@ library(phenopath)
 #   ____________________________________________________________________________
 #   Load data                                                               ####
 
-params <- task$params
+parameters <- task$parameters
 expression <- as.matrix(task$expression)
 
 #   ____________________________________________________________________________
@@ -26,10 +26,10 @@ fit <- phenopath::phenopath(
   exprs_obj = expression,
   x = rep(1, nrow(expression)),
   elbo_tol = 1e-6,
-  thin = params$thin,
-  z_init = ifelse(params$z_init == "random", "random", as.numeric(params$z_init)),
-  model_mu = params$model_mu,
-  scale_y = params$scale_y
+  thin = parameters$thin,
+  z_init = ifelse(parameters$z_init == "random", "random", as.numeric(parameters$z_init)),
+  model_mu = parameters$model_mu,
+  scale_y = parameters$scale_y
 )
 pseudotime <- phenopath::trajectory(fit) %>%
   setNames(rownames(expression))
