@@ -1,23 +1,17 @@
-library(jsonlite)
-library(readr)
-library(dplyr)
-library(purrr)
+#!/usr/local/bin/Rscript
 
-library(phenopath)
+task <- dyncli::main()
+
+library(dplyr, warn.conflicts = FALSE)
+library(purrr, warn.conflicts = FALSE)
+library(dynwrap, warn.conflicts = FALSE)
+library(phenopath, warn.conflicts = FALSE)
 
 #   ____________________________________________________________________________
 #   Load data                                                               ####
 
-data <- read_rds("/ti/input/data.rds")
-params <- jsonlite::read_json("/ti/input/params.json")
-
-#' @examples
-#' data <- dyntoy::generate_dataset(id = "test", num_cells = 300, num_features = 300, model = "linear") %>% c(., .$prior_information)
-#' params <- yaml::read_yaml("containers/embeddr/definition.yml")$parameters %>%
-#'   {.[names(.) != "forbidden"]} %>%
-#'   map(~ .$default)
-
-expression <- data$expression
+parameters <- task$parameters
+expression <- as.matrix(task$expression)
 
 #   ____________________________________________________________________________
 #   Infer trajectory                                                        ####
@@ -30,10 +24,10 @@ fit <- phenopath::phenopath(
   exprs_obj = expression,
   x = rep(1, nrow(expression)),
   elbo_tol = 1e-6,
-  thin = params$thin,
-  z_init = ifelse(params$z_init == "random", "random", as.numeric(params$z_init)),
-  model_mu = params$model_mu,
-  scale_y = params$scale_y
+  thin = parameters$thin,
+  z_init = ifelse(parameters$z_init == "random", "random", as.numeric(parameters$z_init)),
+  model_mu = parameters$model_mu,
+  scale_y = parameters$scale_y
 )
 pseudotime <- phenopath::trajectory(fit) %>%
   setNames(rownames(expression))
@@ -51,4 +45,8 @@ output <- lst(
 #   ____________________________________________________________________________
 #   Save output                                                             ####
 
-write_rds(output, "/ti/output/output.rds")
+output <- dynwrap::wrap_data(cell_ids = names(pseudotime)) %>%
+  dynwrap::add_linear_trajectory(pseudotime = pseudotime) %>%
+  dynwrap::add_timings(timings = checkpoints)
+
+output %>% dyncli::write_output(task$output)
